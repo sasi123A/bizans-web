@@ -4,47 +4,119 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bizans RP</title>
-  <!-- Firebase App and Firestore SDKs (Compat Version) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; background-color: #f9f9f9; }
-    .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap');
+    
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      background-color: #1a0012; color: #fdfbf7;
+      font-family: 'Montserrat', sans-serif;
+      display: flex; height: 100vh; overflow: hidden;
+    }
+    
+    /* Split-screen Layout */
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #3a002c 0%, #1d0016 100%);
+      border-right: 4px solid #d4af37;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 40px;
+    }
+    .left-panel h1 {
+      font-family: 'Cinzel', serif;
+      color: #d4af37; font-size: 3rem; margin: 10px 0;
+      text-shadow: 0px 4px 10px rgba(212, 175, 55, 0.4);
+    }
+    .left-panel p { color: #f3e5ab; font-size: 1.1rem; letter-spacing: 1px; }
+
+    .right-panel {
+      flex: 1.2; padding: 50px;
+      display: flex; flex-direction: column;
+      justify-content: center; overflow-y: auto;
+      background: #14000e;
+    }
+    .right-panel h3 {
+      font-family: 'Cinzel', serif; color: #d4af37;
+      border-bottom: 2px solid #d4af37; padding-bottom: 8px;
+      margin-top: 0; margin-bottom: 20px;
+    }
+
+    /* Styled Input Fields & Buttons */
+    input {
+      background: #2b0020; border: 2px solid #4a0038;
+      color: #fdfbf7; padding: 12px; border-radius: 4px;
+      margin-bottom: 15px; width: 100%; font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      outline: none; border-color: #d4af37;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+    button {
+      background: linear-gradient(135deg, #d4af37 0%, #aa841b 100%);
+      color: #1a0012; border: none; padding: 12px 20px;
+      font-family: 'Cinzel', serif; font-weight: bold; font-size: 1rem;
+      border-radius: 4px; cursor: pointer; width: 100%;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s, background 0.3s;
+    }
+    button:hover { background: #ffd700; transform: translateY(-2px); }
+    button:active { transform: translateY(0); }
+
+    /* Forms */
+    .form-group { margin-bottom: 25px; }
+
+    /* Admin Panel and Live User Table */
+    #admin-panel { margin-top: 30px; animation: fadeIn 0.5s ease; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #d4af37; }
+    th, td { border: 1px solid #4a0038; padding: 12px; text-align: left; }
+    th { background-color: #2b0020; color: #d4af37; font-family: 'Cinzel', serif; }
+    td { background-color: #1c0014; }
+    
+    .btn-delete {
+      background: #800020; color: #fdfbf7; border: 1px solid #d4af37;
+      padding: 6px 12px; font-size: 0.8rem; width: auto;
+    }
+    .btn-delete:hover { background: #b00020; }
     .hidden { display: none; }
-    form { margin-bottom: 20px; }
-    input { display: block; margin: 10px 0; padding: 8px; width: 100%; box-sizing: border-box; }
-    button { padding: 8px 15px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
-    button:hover { background: #0056b3; }
-    table { border-collapse: collapse; margin-top: 15px; width: 100%; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .btn-delete { background: #dc3545; }
-    .btn-delete:hover { background: #bd2130; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Bizans RP - Portal</h2>
-    
-    <div id="auth-section">
-      <h3>Sign Up</h3>
-      <form id="signup-form">
-        <input type="text" id="signup-user" placeholder="Username" required>
-        <input type="email" id="signup-email" placeholder="Email" required>
-        <input type="password" id="signup-pass" placeholder="Password" required>
-        <button type="submit">Sign Up</button>
-      </form>
 
-      <h3>Login</h3>
-      <form id="login-form">
-        <input type="text" id="login-user" placeholder="Username" required>
-        <input type="password" id="login-pass" placeholder="Password" required>
-        <button type="submit">Login</button>
-      </form>
+  <div class="left-panel">
+    <h1>BIZANS RP</h1>
+    <p>IMPERIAL ROLEPLAY EXPERIENCE</p>
+  </div>
+
+  <div class="right-panel">
+    <div id="auth-section">
+      <div class="form-group">
+        <h3>Join the Empire (Sign Up)</h3>
+        <form id="signup-form">
+          <input type="text" id="signup-user" placeholder="Username" required>
+          <input type="email" id="signup-email" placeholder="Email Address" required>
+          <input type="password" id="signup-pass" placeholder="Password" required>
+          <button type="submit">REGISTER CITIZEN</button>
+        </form>
+      </div>
+
+      <div class="form-group">
+        <h3>Access Portal (Login)</h3>
+        <form id="login-form">
+          <input type="text" id="login-user" placeholder="Username" required>
+          <input type="password" id="login-pass" placeholder="Password" required>
+          <button type="submit">ENTER REALM</button>
+        </form>
+      </div>
     </div>
 
     <div id="admin-panel" class="hidden">
-      <h3>Admin Panel - Live Users</h3>
+      <h3>Imperial Archives (Admin Panel)</h3>
       <table>
         <thead>
           <tr>
@@ -59,7 +131,6 @@
   </div>
 
   <script>
-    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDbJDYEg0_XZTfjUkU4-Rp9PegZbEfjcuE",
       authDomain: "bizans-rp.firebaseapp.com",
@@ -70,11 +141,9 @@
       measurementId: "G-EYQ5C6C86M"
     };
 
-    // Initialize Firebase and Firestore
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // User Registration
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('signup-user').value;
@@ -83,22 +152,20 @@
 
       try {
         await db.collection('users').add({ username, email, password });
-        alert('Account registered successfully!');
+        alert('Citizen registered in the archives!');
         e.target.reset();
       } catch (err) {
-        alert('Error signing up: ' + err.message);
+        alert('Error: ' + err.message);
       }
     });
 
-    // User & Admin Login
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-user').value;
       const password = document.getElementById('login-pass').value;
 
-      // Hardcoded Admin Check
       if (username === "Konstantinos" && password === "1234.1234.Asd") {
-        alert('Admin Access Granted!');
+        alert('Imperial Admin recognized!');
         document.getElementById('admin-panel').classList.remove('hidden');
         loadUsersLive();
         return;
@@ -111,16 +178,15 @@
           .get();
 
         if (!snap.empty) {
-          alert(`Successfully logged in as ${username}!`);
+          alert(`Welcome back, ${username}!`);
         } else {
-          alert('Invalid login credentials.');
+          alert('Access Denied. Credentials invalid.');
         }
       } catch (err) {
-        alert('Error during login: ' + err.message);
+        alert('Authentication failed: ' + err.message);
       }
     });
 
-    // Live sync user records for Admin Panel
     let liveUnsubscribe = null;
     function loadUsersLive() {
       if (liveUnsubscribe) liveUnsubscribe();
@@ -133,23 +199,19 @@
           tr.innerHTML = `
             <td>${u.username || 'N/A'}</td>
             <td>${u.email || 'N/A'}</td>
-            <td><button class="btn-delete" onclick="deleteUser('${doc.id}')">Delete</button></td>
+            <td><button class="btn-delete" onclick="deleteUser('${doc.id}')">Exile (Delete)</button></td>
           `;
           tbody.appendChild(tr);
         });
-      }, (err) => {
-        console.error("Live sync failed: ", err);
       });
     }
 
-    // Permanently delete user document from Firestore
     window.deleteUser = async (id) => {
-      if (confirm('Are you sure you want to permanently delete this user?')) {
+      if (confirm('Permanently remove this citizen?')) {
         try {
           await db.collection('users').doc(id).delete();
-          alert('User deleted.');
         } catch (err) {
-          alert('Error deleting user: ' + err.message);
+          alert('Error: ' + err.message);
         }
       }
     };
